@@ -1,0 +1,71 @@
+#Evolove Class Parameters
+#the number of threads to spawn for breeding
+breedthreads	= 1
+#the number of threads to spawn for evaluation
+evalthreads	= 1
+#the seed for random number generator #n. n should range from 0 to Max(evalthreads,breedthreads)-1. If value is time, then the seed is based on the system clock plus n.
+# system to automatically change the seed to an arbitrary seed each time you run, you can base the seed on the current wall clock time. You do this by saying seed.0	= time
+seed.0		= 4357
+#subclass EvolutionState
+state = 				ec.simple.SimpleEvolutionState
+#Call the Initializer to create a Population.
+#Call the Evaluator on the Population, replacing the old Population with the result.
+#If the Evaluator found an ideal Individual, and if we're quitting when we find an ideal individual, then go to Step 9.
+#Else if we've run out of generations, go to Step 9.
+#Call the Exchanger on the Population (asking for a Pre-breeding Exchange), replacing the old Population with the result.(do nothing)
+#Call the Breeder on the Population, replacing the old Population with the result.
+#Call the Exchanger on the Population (asking for a Post-breeding Exchange), replacing the old Population with the result.(do nothing)
+#Increment the generation count, and go to Step 2.
+#Call the Finisher on the population, then quit.
+pop		    = ec.Population
+init		= ec.simple.SimpleInitializer
+finish		= ec.simple.SimpleFinisher
+breed		= ec.simple.SimpleBreeder
+eval		= ec.simple.SimpleEvaluator
+stat		= ec.simple.SimpleStatistics
+exch		= ec.simple.SimpleExchanger
+#more parameters that SimpleEvolutionState needs
+#generations is the number of generations to run
+generations		        = 200
+#whether or not we should quit ECJ when it finds an ideal individual
+quit-on-run-complete	= true
+checkpoint		        = false
+checkpoint-prefix	    = ec
+checkpoint-modulo	    = 1
+#write out to a file called out.stat, located right where the user launched ECJ
+stat.file		= $out.stat
+#we'll use the default Subpopulation class for subpopulation #0
+pop.subpops		= 1
+pop.subpop.0		= ec.Subpopulation
+#define some stuff about Subpopulation #0
+pop.subpop.0.size 		= 100
+pop.subpop.0.duplicate-retries 	= 0
+pop.subpop.0.species 		= ec.vector.BitVectorSpecies
+#define the representation
+#individual is specified
+pop.subpop.0.species.ind	= ec.vector.BitVectorIndividual
+pop.subpop.0.species.genome-size	= 100
+pop.subpop.0.species.crossover-type	= one
+pop.subpop.0.species.mutation-type  = flip
+pop.subpop.0.species.mutation-prob	= 0.01
+#define the fitness
+pop.subpop.0.species.fitness 		= ec.simple.SimpleFitness
+#define the breeding procedure
+pop.subpop.0.species.pipe			                = ec.vector.breed.VectorMutationPipeline
+pop.subpop.0.species.pipe.source.0		            = ec.vector.breed.VectorCrossoverPipeline
+pop.subpop.0.species.pipe.source.0.source.0	        = ec.select.TournamentSelection
+pop.subpop.0.species.pipe.source.0.source.1	        = ec.select.TournamentSelection
+#define the tournament size for our TournamentSelection to be 2.
+pop.subpop.0.species.pipe.source.0.source.0.size	= 2
+pop.subpop.0.species.pipe.source.0.source.1.size	= 2
+#one more self-explanatory parameter to define
+eval.problem		= ec.app.tutorial1.MaxOnes
+
+
+
+
+
+
+
+
+
